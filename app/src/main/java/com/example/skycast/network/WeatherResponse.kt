@@ -3,12 +3,52 @@ package com.example.skycast.network
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Data class representing the weather response from the API.
+ *
+ * @property current The current weather conditions.
+ * @property location The location information.
+ */
 data class WeatherResponse(
     @SerializedName("current")
     val current: Current,
     @SerializedName("location")
     val location: Location
 ) {
+
+    /**
+     * Data class representing the current weather conditions.
+     *
+     * @property cloud The cloud coverage.
+     * @property condition The weather condition.
+     * @property dewpointC The dew point in Celsius.
+     * @property dewpointF The dew point in Fahrenheit.
+     * @property feelslikeC The feels-like temperature in Celsius.
+     * @property feelslikeF The feels-like temperature in Fahrenheit.
+     * @property gustKph The wind gust speed in kilometers per hour.
+     * @property gustMph The wind gust speed in miles per hour.
+     * @property heatindexC The heat index in Celsius.
+     * @property heatindexF The heat index in Fahrenheit.
+     * @property humidity The humidity percentage.
+     * @property isDay Indicator if it is day (1) or night (0).
+     * @property lastUpdated The last updated time.
+     * @property lastUpdatedEpoch The last updated time in epoch.
+     * @property precipIn The precipitation in inches.
+     * @property precipMm The precipitation in millimeters.
+     * @property pressureIn The pressure in inches.
+     * @property pressureMb The pressure in millibars.
+     * @property tempC The temperature in Celsius.
+     * @property tempF The temperature in Fahrenheit.
+     * @property uv The UV index.
+     * @property visKm The visibility in kilometers.
+     * @property visMiles The visibility in miles.
+     * @property windDegree The wind direction in degrees.
+     * @property windDir The wind direction as a string.
+     * @property windKph The wind speed in kilometers per hour.
+     * @property windMph The wind speed in miles per hour.
+     * @property windchillC The wind chill in Celsius.
+     * @property windchillF The wind chill in Fahrenheit.
+     */
     data class Current(
         @SerializedName("cloud")
         val cloud: String?,
@@ -69,6 +109,14 @@ data class WeatherResponse(
         @SerializedName("windchill_f")
         val windchillF: String?
     ) {
+
+        /**
+         * Data class representing the weather condition.
+         *
+         * @property code The condition code.
+         * @property icon The URL of the condition icon.
+         * @property text The condition description.
+         */
         data class Condition(
             @SerializedName("code")
             val code: String?,
@@ -79,6 +127,18 @@ data class WeatherResponse(
         )
     }
 
+    /**
+     * Data class representing the location information.
+     *
+     * @property country The country name.
+     * @property lat The latitude.
+     * @property localtime The local time.
+     * @property localtimeEpoch The local time in epoch.
+     * @property lon The longitude.
+     * @property name The location name. t
+     * @property region The region name.
+     * @property tzId The time zone ID.
+     */
     data class Location(
         @SerializedName("country")
         val country: String,

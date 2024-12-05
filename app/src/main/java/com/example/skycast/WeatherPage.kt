@@ -1,6 +1,5 @@
 package com.example.skycast
 
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,11 +36,15 @@ import coil.compose.AsyncImage
 import com.example.skycast.network.ApiResponse
 import com.example.skycast.network.WeatherResponse
 
-
+/**
+ * Composable function to display the weather page.
+ *
+ * @param viewModel The WeatherViewModel instance to fetch weather data.
+ */
 @Composable
 fun WeatherPage(viewModel: WeatherViewModel) {
-    // TODO: background image/color
-    // TODO: Dark mode
+    // TODO: Add background image or color
+    // TODO: Implement dark mode support
     var city by remember {
         mutableStateOf("")
     }
@@ -63,10 +66,10 @@ fun WeatherPage(viewModel: WeatherViewModel) {
             Arrangement.SpaceEvenly,
             Alignment.CenterVertically
         ) {
-            // TODO: add functionality so that when user click enter on keypad it start search
-            // TODO: statically sized textfield
-            // TODO: add hint text maybe search history
-            // TODO: Option for geo location (necessary permissions added to Androidmanifest.xml)
+            // TODO: Add functionality to start search when user presses enter on the keyboard
+            // TODO: Make text field size static
+            // TODO: Add hint text and maybe search history
+            // TODO: Add option for geolocation (necessary permissions added to Androidmanifest.xml)
             OutlinedTextField(
                 modifier = Modifier.weight(1f),
                 value = city,
@@ -97,6 +100,11 @@ fun WeatherPage(viewModel: WeatherViewModel) {
     }
 }
 
+/**
+ * Composable function to display weather details.
+ *
+ * @param data The WeatherResponse data to display.
+ */
 @Composable
 fun WeatherDetails(data: WeatherResponse) {
     Column (
@@ -140,7 +148,7 @@ fun WeatherDetails(data: WeatherResponse) {
         )
 
         Spacer(modifier = Modifier.height(15.dp))
-        // TODO: better string format (e.g text aliment maybe different information
+        // TODO: Improve string formatting (e.g., text alignment, additional information)
         Card {
             Column (Modifier.fillMaxWidth()) {
                 Row(
@@ -170,6 +178,12 @@ fun WeatherDetails(data: WeatherResponse) {
     }
 }
 
+/**
+ * Composable function to display a key-value pair of weather details.
+ *
+ * @param key The key or label of the weather detail.
+ * @param value The value of the weather detail.
+ */
 @Composable
 fun WeatherDetails(key: String?, value: String?) {
     Column(
