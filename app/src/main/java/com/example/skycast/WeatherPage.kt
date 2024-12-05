@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -40,7 +41,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -120,17 +120,11 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                     )
                 }
             }
-
-            when (val result = weatherResult.value) {
-                is ApiResponse.Loading -> CircularProgressIndicator()
-                is ApiResponse.Success -> WeatherDetails(result.data)
-                is ApiResponse.Error -> Text(result.message)
-                null -> { }
-            }
+            menageRespons(weatherResult)
         }
     }
-
 }
+
 
 /**
  * Composable function to display weather details.
@@ -201,8 +195,8 @@ fun WeatherDetails(data: WeatherResponse) {
                     Modifier.fillMaxWidth(),
                     Arrangement.SpaceAround
                 ) {
-                    WeatherDetails("Local Time", data.location.localtime?.split(" ")?.get(1))
-                    WeatherDetails("Local Date", data.location.localtime?.split(" ")?.get(0))
+                    WeatherDetails("Local Time", data.location.localtime.split(" ")[1])
+                    WeatherDetails("Local Date", data.location.localtime.split(" ")[0])
                 }
             }
 
@@ -224,5 +218,20 @@ fun WeatherDetails(key: String?, value: String?) {
     ) {
         Text(value ?:"N/A", fontSize = 24.sp, fontWeight = FontWeight.Bold)
         Text(key ?: "N/A", fontWeight = FontWeight.SemiBold, color = Color.Gray)
+    }
+}
+
+/**
+ * Composable function to manage the API response and display the appropriate UI.
+ *
+ * @param weatherResult The state of the API response.
+ */
+@Composable
+private fun menageRespons(weatherResult: State<ApiResponse<WeatherResponse>?>) {
+    when (val result = weatherResult.value) {
+        is ApiResponse.Loading -> CircularProgressIndicator()
+        is ApiResponse.Success -> WeatherDetails(result.data)
+        is ApiResponse.Error -> Text(result.message)
+        null -> {}
     }
 }
