@@ -1,14 +1,19 @@
 package com.example.skycast
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
@@ -18,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -26,24 +32,31 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.skycast.network.ApiResponse
 import com.example.skycast.network.WeatherResponse
+import com.example.skycast.ui.theme.BlueDark
+import com.example.skycast.ui.theme.BlueLight
 
 /**
  * Composable function to display the weather page.
  *
  * @param viewModel The WeatherViewModel instance to fetch weather data.
  */
+
 @Composable
 fun WeatherPage(viewModel: WeatherViewModel) {
-    // TODO: Add background image or color
     // TODO: Implement dark mode support
     var city by remember {
         mutableStateOf("")
@@ -53,51 +66,70 @@ fun WeatherPage(viewModel: WeatherViewModel) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    Column (
-        Modifier.fillMaxWidth().padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Row (
-            Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            Arrangement.SpaceEvenly,
-            Alignment.CenterVertically
-        ) {
-            // TODO: Add functionality to start search when user presses enter on the keyboard
-            // TODO: Make text field size static
-            // TODO: Add hint text and maybe search history
-            // TODO: Add option for geolocation (necessary permissions added to Androidmanifest.xml)
-            OutlinedTextField(
-                modifier = Modifier.weight(1f),
-                value = city,
-                onValueChange = {
-                    city = it
-                },
-                label = {
-                    Text("Search for location")
-                }
+    Box(
+        Modifier.fillMaxSize()
+            .paint(
+                painterResource(id = R.drawable.cloudyskybackground),
+                contentScale = ContentScale.FillBounds
             )
-            IconButton(onClick = {
-                viewModel.getData(city)
-                keyboardController?.hide()
-            }) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search for location"
+    ) {
+        Column (
+            Modifier.fillMaxWidth().padding(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(100.dp))
+
+            Row (
+                Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                Arrangement.SpaceEvenly,
+                Alignment.CenterVertically
+            ) {
+                // TODO: Add hint text and maybe search history
+                // TODO: Add option for geolocation (necessary permissions added to Androidmanifest.xml)
+                OutlinedTextField(
+                    modifier = Modifier.weight(1f),
+                    value = city,
+                    onValueChange = { city = it },
+                    label = { Text("Search for location") },
+                    shape = RoundedCornerShape(20.dp),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White,
+                        unfocusedIndicatorColor = BlueLight,
+                        focusedIndicatorColor = BlueLight,
+                        focusedLabelColor = BlueDark,
+                        unfocusedLabelColor = BlueLight,
+                    ),
+                    keyboardOptions = KeyboardOptions( imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(
+                        onSearch = {
+                            viewModel.getData(city)
+                            keyboardController?.hide()
+                        }
+                    )
                 )
+                IconButton(onClick = {
+                    viewModel.getData(city)
+                    keyboardController?.hide()
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search for location"
+                    )
+                }
+            }
+
+            when (val result = weatherResult.value) {
+                is ApiResponse.Loading -> CircularProgressIndicator()
+                is ApiResponse.Success -> WeatherDetails(result.data)
+                is ApiResponse.Error -> Text(result.message)
+                null -> { }
             }
         }
-
-        when (val result = weatherResult.value) {
-            is ApiResponse.Loading -> CircularProgressIndicator()
-            is ApiResponse.Success -> WeatherDetails(result.data)
-            is ApiResponse.Error -> Text(result.message)
-            null -> { }
-        }
     }
+
 }
 
 /**
