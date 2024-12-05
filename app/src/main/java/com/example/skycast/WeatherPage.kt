@@ -56,7 +56,7 @@ import com.example.skycast.ui.theme.BlueLight
  */
 
 @Composable
-fun WeatherPage(viewModel: WeatherViewModel) {
+fun WeatherPage(viewModel: WeatherViewModel, latilon: String?) {
     // TODO: Implement dark mode support
     var city by remember {
         mutableStateOf("")
@@ -71,7 +71,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
             .paint(
                 painterResource(id = R.drawable.cloudyskybackground),
                 contentScale = ContentScale.FillBounds
-            )
+            ),
     ) {
         Column (
             Modifier.fillMaxWidth().padding(8.dp),
