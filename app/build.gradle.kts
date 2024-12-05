@@ -1,3 +1,7 @@
+import java.io.FileInputStream
+import  java.util.Properties
+
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -16,7 +20,15 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val localProperties = Properties()
+        localProperties.load(FileInputStream(rootProject.file("local.properties")))
+        buildConfigField(
+            "String",
+            "API_KEY",
+            "\"${localProperties.getProperty("API_KEY")}\"")
     }
+
 
     buildTypes {
         release {
@@ -36,6 +48,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -60,4 +73,12 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    // Runtime LiveData
+    implementation("androidx.compose.runtime:runtime-livedata:1.7.5")
+
+    // Image loading
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
+    implementation("androidx.navigation:navigation-compose:2.7.4")
+
 }
