@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -92,7 +93,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                     modifier = Modifier.weight(1f),
                     value = city,
                     onValueChange = { city = it },
-                    label = { Text("Search for location") },
+                    label = { Text(stringResource(R.string.search)) },
                     shape = RoundedCornerShape(20.dp),
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.White,
@@ -116,7 +117,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                 }) {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = "Search for location"
+                        contentDescription = stringResource(R.string.search)
                     )
                 }
             }
@@ -150,9 +151,10 @@ fun WeatherDetails(data: WeatherResponse) {
         ) {
             Icon(
                 Icons.Default.LocationOn,
-                contentDescription = "Location icon",
+                contentDescription = stringResource(R.string.locationIcon),
                 Modifier.size(40.dp)
             )
+            // TODO: need to change logic because of API limitations to translate country name
             Text(data.location.name, fontSize = 30.sp)
             Spacer(modifier = Modifier.width(10.dp))
             Text(data.location.country, fontSize = 20.sp, color = Color.Gray)
@@ -169,7 +171,7 @@ fun WeatherDetails(data: WeatherResponse) {
         AsyncImage(
             modifier = Modifier.size(160.dp),
             model = "https:${data.current.condition?.icon}".replace("64x64", "128x128"),
-            contentDescription = "Weather condition icon",
+            contentDescription = stringResource(R.string.conditionIcon),
         )
 
         Text(
@@ -180,29 +182,33 @@ fun WeatherDetails(data: WeatherResponse) {
         )
 
         Spacer(modifier = Modifier.height(15.dp))
-        // TODO: Improve string formatting (e.g., text alignment, additional information)
+        /**
+         * hard coded string has been replaced with strings.xml as local dictionary
+         * stringResource(R.string.<name>) is for loading value from strings.xml for specific language
+         * current support: Polish, English
+         **/
         Card {
             Column (Modifier.fillMaxWidth()) {
                 Row(
                     Modifier.fillMaxWidth(),
                     Arrangement.SpaceAround
                 ) {
-                    WeatherDetails("Humidity", "${data.current.humidity}%")
-                    WeatherDetails("Wind", "${data.current.windKph} km/h")
+                    WeatherDetails(stringResource(R.string.humidity), "${data.current.humidity}%")
+                    WeatherDetails(stringResource(R.string.wind), "${data.current.windKph} km/h")
                 }
                 Row(
                     Modifier.fillMaxWidth(),
                     Arrangement.SpaceAround
                 ) {
-                    WeatherDetails("Pressure", "${data.current.pressureMb} mb")
-                    WeatherDetails("Cloud", "${data.current.cloud}%")
+                    WeatherDetails(stringResource(R.string.pressure), "${data.current.pressureMb} mb")
+                    WeatherDetails(stringResource(R.string.cloud), "${data.current.cloud}%")
                 }
                 Row(
                     Modifier.fillMaxWidth(),
                     Arrangement.SpaceAround
                 ) {
-                    WeatherDetails("Local Time", data.location.localtime?.split(" ")?.get(1))
-                    WeatherDetails("Local Date", data.location.localtime?.split(" ")?.get(0))
+                    WeatherDetails(stringResource(R.string.localTime), data.location.localtime?.split(" ")?.get(1))
+                    WeatherDetails(stringResource(R.string.localDate), data.location.localtime?.split(" ")?.get(0))
                 }
             }
 
