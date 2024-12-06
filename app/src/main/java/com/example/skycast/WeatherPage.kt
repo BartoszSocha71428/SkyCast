@@ -26,6 +26,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -66,10 +67,9 @@ fun WeatherPage(viewModel: WeatherViewModel, latilon: String?) {
 
     val weatherResult = viewModel.weatherResult.observeAsState()
     if (latilon is String) {
-        Log.d("Location", latilon)
-        viewModel.getData(latilon)
-    } else {
-        Log.d("Location", "null")
+        LaunchedEffect(latilon) {
+            viewModel.getData(latilon)
+        }
     }
 
     val keyboardController = LocalSoftwareKeyboardController.current
