@@ -1,5 +1,6 @@
 package com.example.skycast
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,6 +49,7 @@ import com.example.skycast.network.ApiResponse
 import com.example.skycast.network.WeatherResponse
 import com.example.skycast.ui.theme.BlueDark
 import com.example.skycast.ui.theme.BlueLight
+import kotlin.math.log2
 
 /**
  * Composable function to display the weather page.
@@ -63,6 +65,12 @@ fun WeatherPage(viewModel: WeatherViewModel, latilon: String?) {
     }
 
     val weatherResult = viewModel.weatherResult.observeAsState()
+    if (latilon is String) {
+        Log.d("Location", latilon)
+        viewModel.getData(latilon)
+    } else {
+        Log.d("Location", "null")
+    }
 
     val keyboardController = LocalSoftwareKeyboardController.current
 

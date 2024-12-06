@@ -16,13 +16,14 @@ import com.example.skycast.ui.theme.SkyCastTheme
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.mutableStateOf
 import kotlin.math.PI
 
 class MainActivity : ComponentActivity() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private var latilon: String? = null
+    private var latilonState = mutableStateOf<String?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +53,7 @@ class MainActivity : ComponentActivity() {
          */
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
-                latilon = "${location.latitude},${location.longitude}"
+                latilonState.value = "${location.latitude},${location.longitude}"
             } else {
                 // TODO: change logic if is null
                 Log.d("Location","Nie można uzyskać lokalizacji")
@@ -67,7 +68,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    WeatherPage(weatherViewModel, latilon)
+                    WeatherPage(weatherViewModel, latilonState.value)
                 }
             }
         }
