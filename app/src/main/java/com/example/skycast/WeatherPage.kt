@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
@@ -48,6 +50,8 @@ import com.example.skycast.network.ApiResponse
 import com.example.skycast.network.WeatherResponse
 import com.example.skycast.ui.theme.BlueDark
 import com.example.skycast.ui.theme.BlueLight
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Composable function to display the weather page.
@@ -61,10 +65,9 @@ fun WeatherPage(viewModel: WeatherViewModel) {
     var city by remember {
         mutableStateOf("")
     }
-
     val weatherResult = viewModel.weatherResult.observeAsState()
-
     val keyboardController = LocalSoftwareKeyboardController.current
+    val scrollState = rememberScrollState()
 
     Box(
         Modifier.fillMaxSize()
@@ -74,8 +77,9 @@ fun WeatherPage(viewModel: WeatherViewModel) {
             )
     ) {
         Column (
-            Modifier.fillMaxWidth().padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            Modifier.fillMaxWidth().padding(8.dp).verticalScroll(scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally,
+
         ) {
             Spacer(modifier = Modifier.height(100.dp))
 
@@ -120,6 +124,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                     )
                 }
             }
+
             menageRespons(weatherResult)
         }
     }
@@ -199,10 +204,15 @@ fun WeatherDetails(data: WeatherResponse) {
                     WeatherDetails("Local Date", data.location.localtime.split(" ")[0])
                 }
             }
-
         }
     }
+
+    WeatherForecast(data)
 }
+
+
+@Composable
+fun WeatherDetails(data: Map<String?, String?>) = data.forEach { (key, value) -> WeatherDetails(key, value) }
 
 /**
  * Composable function to display a key-value pair of weather details.
@@ -221,6 +231,38 @@ fun WeatherDetails(key: String?, value: String?) {
     }
 }
 
+@Composable
+fun WeatherForecast(data: WeatherResponse) {
+    Spacer(modifier = Modifier.height(20.dp))
+    Card {
+        Column (Modifier.fillMaxWidth()) {
+            Text("Forecast", fontSize = 30.sp, fontWeight = FontWeight.Bold)
+            data.forecast?.forecastday?.forEach {
+                Row (
+                    Modifier.fillMaxWidth(),
+                    Arrangement.SpaceAround
+                ) {
+                    WeatherForecast(it)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun WeatherForecast(forecast: WeatherResponse.Forecast.Forecastday?) {
+    forecast?.let {
+        val dayOfTheWeek = it.date?.let  { x -> getDayOfWeekLegacy(x) }
+        Text(dayOfTheWeek ?: "N/A", fontWeight = FontWeight.Bold)
+        AsyncImage(
+            model = "https:${it.day?.condition?.icon}",
+            contentDescription = "Weather condition icon",
+        )
+        Text("${it.day?.maxtempC}°C ${it.day?.mintempC}°C", fontWeight = FontWeight.Bold)
+
+    }
+}
+
 /**
  * Composable function to manage the API response and display the appropriate UI.
  *
@@ -233,5 +275,26 @@ private fun menageRespons(weatherResult: State<ApiResponse<WeatherResponse>?>) {
         is ApiResponse.Success -> WeatherDetails(result.data)
         is ApiResponse.Error -> Text(result.message)
         null -> {}
+    }
+}
+
+@Composable
+fun getDayOfWeekLegacy(dateString: String): String {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val date = dateFormat.parse(dateString)
+    val calendar = Calendar.getInstance()
+    calendar.time = date
+
+    val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) // Returns 1 (Sunday) to 7 (Saturday)
+
+    return when (dayOfWeek) {
+        Calendar.SUNDAY -> "SUNDAY"
+        Calendar.MONDAY -> "MONDAY"
+        Calendar.TUESDAY -> "TUESDAY"
+        Calendar.WEDNESDAY -> "WEDNESDAY"
+        Calendar.THURSDAY -> "THURSDAY"
+        Calendar.FRIDAY -> "FRIDAY"
+        Calendar.SATURDAY -> "SATURDAY"
+        else -> "UNKNOWN"
     }
 }
