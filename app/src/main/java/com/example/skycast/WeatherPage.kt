@@ -51,8 +51,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.skycast.network.ApiResponse
 import com.example.skycast.network.WeatherResponse
-import com.example.skycast.ui.theme.BlueDark
-import com.example.skycast.ui.theme.BlueLight
 import com.example.skycast.ui.theme.TransparentWhite
 import java.text.SimpleDateFormat
 import java.util.*
