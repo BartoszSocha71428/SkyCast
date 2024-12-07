@@ -1,5 +1,6 @@
 package com.example.skycast
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -53,6 +55,8 @@ import com.example.skycast.network.ApiResponse
 import com.example.skycast.network.WeatherResponse
 import com.example.skycast.ui.theme.BlueDark
 import com.example.skycast.ui.theme.BlueLight
+
+import kotlin.math.log2
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -63,12 +67,19 @@ import java.util.*
  */
 
 @Composable
-fun WeatherPage(viewModel: WeatherViewModel) {
+fun WeatherPage(viewModel: WeatherViewModel, latilon: String?) {
     // TODO: Implement dark mode support
     var city by remember {
         mutableStateOf("")
     }
     val weatherResult = viewModel.weatherResult.observeAsState()
+
+    if (latilon is String) {
+        LaunchedEffect(latilon) {
+            viewModel.getData(latilon)
+        }
+    }
+
     val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
 
@@ -77,7 +88,7 @@ fun WeatherPage(viewModel: WeatherViewModel) {
             .paint(
                 painterResource(id = R.drawable.cloudyskybackground),
                 contentScale = ContentScale.FillBounds
-            )
+            ),
     ) {
         Column (
             Modifier.fillMaxWidth().padding(8.dp).verticalScroll(scrollState),
