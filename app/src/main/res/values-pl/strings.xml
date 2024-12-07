@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SkyCast</string>
+    <string name="search">Wyszukiwanie lokalizacji</string>
+    <string name="humidity">Wilgotność</string>
+    <string name="wind">Wiatr</string>
+    <string name="pressure">Ciśnienie</string>
+    <string name="cloud">Zachmurzenie</string>
+    <string name="localTime">Czas lokoalny</string>
+    <string name="localDate">Data</string>
+    <string name="conditionIcon">Ikona warunków pogodowych</string>
+    <string name="locationIcon">Ikona lokalizacji</string>
+</resources>

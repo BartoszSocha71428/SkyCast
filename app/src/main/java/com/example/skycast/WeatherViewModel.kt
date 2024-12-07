@@ -29,7 +29,7 @@ class WeatherViewModel : ViewModel() {
         _weatherResult.value = ApiResponse.Loading
         viewModelScope.launch {
             try {
-                val response = weatherService.getCurrentWeather(ApiIdentification.API_KEY, city)
+                val response = weatherService.getForecastWeather(ApiIdentification.API_KEY, city)
 
                 if (response.isSuccessful) {
                     response.body()?.let {

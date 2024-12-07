@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">SkyCast</string>
+    <string name="app_name" translatable="false">SkyCast</string>
+    <string name="search">Search for location</string>
+    <string name="humidity">Humidity</string>
+    <string name="wind">Wind</string>
+    <string name="pressure">Pressure</string>
+    <string name="cloud">Cloud</string>
+    <string name="localTime">Local Time</string>
+    <string name="localDate">Local Date</string>
+    <string name="conditionIcon">Weather condition icon</string>
+    <string name="locationIcon">Location icon</string>
 </resources>
