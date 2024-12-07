@@ -20,6 +20,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -124,7 +126,6 @@ fun WeatherPage(viewModel: WeatherViewModel) {
                     )
                 }
             }
-
             menageRespons(weatherResult)
         }
     }
@@ -180,29 +181,25 @@ fun WeatherDetails(data: WeatherResponse) {
 
         Spacer(modifier = Modifier.height(15.dp))
         // TODO: Improve string formatting (e.g., text alignment, additional information)
-        Card {
-            Column (Modifier.fillMaxWidth()) {
-                Row(
-                    Modifier.fillMaxWidth(),
-                    Arrangement.SpaceAround
-                ) {
-                    WeatherDetails("Humidity", "${data.current.humidity}%")
-                    WeatherDetails("Wind", "${data.current.windKph} km/h")
-                }
-                Row(
-                    Modifier.fillMaxWidth(),
-                    Arrangement.SpaceAround
-                ) {
-                    WeatherDetails("Pressure", "${data.current.pressureMb} mb")
-                    WeatherDetails("Cloud", "${data.current.cloud}%")
-                }
-                Row(
-                    Modifier.fillMaxWidth(),
-                    Arrangement.SpaceAround
-                ) {
-                    WeatherDetails("Local Time", data.location.localtime.split(" ")[1])
-                    WeatherDetails("Local Date", data.location.localtime.split(" ")[0])
-                }
+
+        val weatherData: List<Pair<String, String>> = listOf(
+            "Humidity" to "${data.current.humidity}%",
+            "Wind" to "${data.current.windKph} km/h",
+            "Pressure" to "${data.current.pressureMb} mb",
+            "Cloud" to "${data.current.cloud}%",
+            "Local Time" to data.location.localtime.split(" ")[1],
+            "Local Date" to data.location.localtime.split(" ")[0]
+        )
+
+        Card (
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White,
+                contentColor = Color.Black,
+                disabledContainerColor = Color.White,
+                )
+        ) {
+            Column (Modifier.fillMaxWidth().padding(8.dp)) {
+                WeatherDetails(weatherData)
             }
         }
     }
@@ -210,9 +207,20 @@ fun WeatherDetails(data: WeatherResponse) {
     WeatherForecast(data)
 }
 
-
 @Composable
-fun WeatherDetails(data: Map<String?, String?>) = data.forEach { (key, value) -> WeatherDetails(key, value) }
+fun WeatherDetails(data: List<Pair<String, String>>) {
+    for (i in data.indices step 2) {
+        Row(
+            Modifier.fillMaxWidth(),
+            Arrangement.SpaceAround
+        ) {
+            WeatherDetails(data[i].first, data[i].second)
+            if (i + 1 < data.size) {
+                WeatherDetails(data[i + 1].first, data[i + 1].second)
+            }
+        }
+    }
+}
 
 /**
  * Composable function to display a key-value pair of weather details.
@@ -234,13 +242,19 @@ fun WeatherDetails(key: String?, value: String?) {
 @Composable
 fun WeatherForecast(data: WeatherResponse) {
     Spacer(modifier = Modifier.height(20.dp))
-    Card {
+    Card (
+        colors = CardDefaults.cardColors(
+        containerColor = Color.Transparent, // todo white
+        contentColor = Color.Black,
+        disabledContainerColor = Color.White
+        )
+    ) {
         Column (Modifier.fillMaxWidth()) {
             Text("Forecast", fontSize = 30.sp, fontWeight = FontWeight.Bold)
             data.forecast?.forecastday?.forEach {
                 Row (
-                    Modifier.fillMaxWidth(),
-                    Arrangement.SpaceAround
+                    Modifier.fillMaxWidth().padding(4.dp),
+                    Arrangement.Start,
                 ) {
                     WeatherForecast(it)
                 }
