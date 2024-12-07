@@ -1,8 +1,10 @@
 package com.example.skycast.network
 
+import androidx.compose.ui.text.intl.Locale
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
+
 
 /**
  * Interface defining the WeatherService API endpoints.
@@ -18,10 +20,9 @@ interface WeatherService {
      * @return A [Response] containing the [WeatherResponse].
      */
     @GET("/v1/current.json")
-    // TODO: Add support for multiple languages in the API response (at least polish)
     suspend fun getCurrentWeather(
         @Query("key") apiKey: String,
         @Query("q") city: String,
-        @Query("lang") lang: String = "en"
+        @Query("lang") lang: String = Locale.current.language
     ): Response<WeatherResponse>
 }
