@@ -36,11 +36,10 @@ interface WeatherService {
      * @return A [Response] containing the [WeatherResponse].
      */
     @GET("/v1/forecast.json")
-    // TODO: Add support for multiple languages in the API response (at least polish)
     suspend fun getForecastWeather(
         @Query("key") apiKey: String,
         @Query("q") city: String,
-        @Query("lang") lang: String = "en",
+        @Query("lang") lang: String = Locale.current.language,
         @Query("days") days: String = "5"
     ): Response<WeatherResponse>
 }
