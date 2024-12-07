@@ -17,7 +17,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.mutableStateOf
-import kotlin.math.PI
 
 class MainActivity : ComponentActivity() {
 

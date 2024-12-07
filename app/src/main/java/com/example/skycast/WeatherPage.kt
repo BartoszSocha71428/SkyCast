@@ -53,7 +53,7 @@ import com.example.skycast.network.ApiResponse
 import com.example.skycast.network.WeatherResponse
 import com.example.skycast.ui.theme.BlueDark
 import com.example.skycast.ui.theme.BlueLight
-
+import com.example.skycast.ui.theme.TransparentWhite
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -111,11 +111,10 @@ fun WeatherPage(viewModel: WeatherViewModel, latilon: String?) {
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.White,
                         unfocusedContainerColor = Color.White,
-                        unfocusedIndicatorColor = BlueLight,
-                        focusedIndicatorColor = BlueLight,
-                        focusedLabelColor = BlueDark,
-                        unfocusedLabelColor = BlueLight,
-                    ),
+                        unfocusedIndicatorColor = Color.Gray,
+                        focusedIndicatorColor = Color.Gray,
+                        focusedLabelColor = Color.Gray,
+                        unfocusedLabelColor = Color.Gray,                    ),
                     keyboardOptions = KeyboardOptions( imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(
                         onSearch = {
@@ -164,7 +163,7 @@ fun WeatherDetails(data: WeatherResponse) {
             // TODO: need to change logic because of API limitations to translate country name
             Text(data.location.name, fontSize = 30.sp)
             Spacer(modifier = Modifier.width(10.dp))
-            Text(data.location.country, fontSize = 20.sp, color = Color.Gray)
+            Text(data.location.country, fontSize = 20.sp, color = Color.Black)
         }
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -185,7 +184,7 @@ fun WeatherDetails(data: WeatherResponse) {
             data.current.condition?.text ?: "",
             fontSize = 20.sp,
             textAlign = TextAlign.Center,
-            color = Color.Gray
+            color = Color.Black
         )
 
         Spacer(modifier = Modifier.height(15.dp))
@@ -202,17 +201,17 @@ fun WeatherDetails(data: WeatherResponse) {
 
         Card (
             colors = CardDefaults.cardColors(
-                containerColor = Color.White,
+                containerColor = TransparentWhite,
                 contentColor = Color.Black,
-                disabledContainerColor = Color.White,
+                disabledContainerColor = TransparentWhite
                 )
         ) {
             Column (Modifier.fillMaxWidth().padding(8.dp)) {
                 WeatherDetails(weatherData)
             }
         }
+        WeatherForecast(data)
     }
-    WeatherForecast(data)
 }
 
 @Composable
@@ -243,7 +242,7 @@ fun WeatherDetails(key: String?, value: String?) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(value ?:"N/A", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Text(key ?: "N/A", fontWeight = FontWeight.SemiBold, color = Color.Gray)
+        Text(key ?: "N/A", fontWeight = FontWeight.SemiBold, color = Color.Black)
     }
 }
 
@@ -252,21 +251,14 @@ fun WeatherForecast(data: WeatherResponse) {
     Spacer(modifier = Modifier.height(20.dp))
     Card (
         colors = CardDefaults.cardColors(
-        containerColor = Color.Transparent,
-        contentColor = Color.Black,
-        disabledContainerColor = Color.White
+            containerColor = TransparentWhite,
+            contentColor = Color.Black,
+            disabledContainerColor = TransparentWhite
         )
     ) {
-        Column (Modifier.fillMaxWidth()) {
+        Column (Modifier.fillMaxWidth().padding(8.dp)) {
             Text(stringResource(R.string.forecast), fontSize = 30.sp, fontWeight = FontWeight.Bold)
-            data.forecast?.forecastday?.forEach {
-                Row (
-                    Modifier.fillMaxWidth().padding(4.dp),
-                    Arrangement.Start,
-                ) {
-                    WeatherForecast(it)
-                }
-            }
+            data.forecast?.forecastday?.forEach { WeatherForecast(it) }
         }
     }
 }
@@ -274,14 +266,35 @@ fun WeatherForecast(data: WeatherResponse) {
 @Composable
 fun WeatherForecast(forecast: WeatherResponse.Forecast.Forecastday?) {
     forecast?.let {
-        val dayOfTheWeek = it.date?.let  { x -> getDayOfWeekLegacy(x) }
-        Text(dayOfTheWeek ?: "N/A", fontWeight = FontWeight.Bold)
-        AsyncImage(
-            model = "https:${it.day?.condition?.icon}",
-            contentDescription = stringResource(R.string.conditionIcon),
-        )
-        Text("${it.day?.maxtempC}°C ${it.day?.mintempC}°C", fontWeight = FontWeight.Bold)
-
+        Row(
+            Modifier.fillMaxWidth().padding(4.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                Modifier.weight(1f).padding(4.dp),
+                verticalArrangement = Arrangement.Center,
+            ) {
+                val dayOfTheWeek = it.date?.let { x -> getDayOfWeekLegacy(x) }
+                Text(dayOfTheWeek ?: "N/A", fontWeight = FontWeight.Bold)
+            }
+            Column(
+                Modifier.weight(1f).padding(4.dp),
+                verticalArrangement = Arrangement.Center,
+            ) {
+                AsyncImage(
+                    model = "https:${it.day?.condition?.icon}",
+                    contentDescription = stringResource(R.string.conditionIcon),
+                    modifier = Modifier.size(64.dp)
+                )
+            }
+            Column(
+                Modifier.weight(1f).padding(4.dp),
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text("${it.day?.maxtempC}°C / ${it.day?.mintempC}°C", fontWeight = FontWeight.Bold)
+            }
+        }
     }
 }
 
