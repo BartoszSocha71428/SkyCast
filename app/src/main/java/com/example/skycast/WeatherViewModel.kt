@@ -40,6 +40,7 @@ class WeatherViewModel : ViewModel() {
                         ApiResponse.Error("Failed to load weather information :(")
                 }
             }
+            // Errors can be added to dictionary only in @Composable
             catch (e: Exception) {
                 // TODO: Handle specific exceptions such as network errors, API limit exceeded, etc.
                 Log.e("WeatherViewModel", "getData: ${e.message}")

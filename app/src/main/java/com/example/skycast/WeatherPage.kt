@@ -51,6 +51,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.skycast.network.ApiResponse
 import com.example.skycast.network.WeatherResponse
+import com.example.skycast.ui.theme.BlueDark
+import com.example.skycast.ui.theme.BlueLight
 import com.example.skycast.ui.theme.TransparentWhite
 import java.text.SimpleDateFormat
 import java.util.*
@@ -100,7 +102,6 @@ fun WeatherPage(viewModel: WeatherViewModel, latilon: String?) {
                 Alignment.CenterVertically
             ) {
                 // TODO: Add hint text and maybe search history
-                // TODO: Add option for geolocation (necessary permissions added to Androidmanifest.xml)
                 OutlinedTextField(
                     modifier = Modifier.weight(1f),
                     value = city,
@@ -227,7 +228,7 @@ fun WeatherDetails(data: List<Pair<String, String>>) {
         }
     }
 }
-// TODO: Update string dictionaries (Polish and English) with strings used below
+
 /**
  * Composable function to display a key-value pair of weather details.
  *
@@ -256,7 +257,7 @@ fun WeatherForecast(data: WeatherResponse) {
         )
     ) {
         Column (Modifier.fillMaxWidth().padding(8.dp)) {
-            Text("Forecast", fontSize = 30.sp, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.forecast), fontSize = 30.sp, fontWeight = FontWeight.Bold)
             data.forecast?.forecastday?.forEach { WeatherForecast(it) }
         }
     }
@@ -283,7 +284,7 @@ fun WeatherForecast(forecast: WeatherResponse.Forecast.Forecastday?) {
             ) {
                 AsyncImage(
                     model = "https:${it.day?.condition?.icon}",
-                    contentDescription = "Weather condition icon",
+                    contentDescription = stringResource(R.string.conditionIcon),
                     modifier = Modifier.size(64.dp)
                 )
             }
@@ -322,13 +323,13 @@ fun getDayOfWeekLegacy(dateString: String): String {
     val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) // Returns 1 (Sunday) to 7 (Saturday)
 
     return when (dayOfWeek) {
-        Calendar.SUNDAY -> "SUNDAY"
-        Calendar.MONDAY -> "MONDAY"
-        Calendar.TUESDAY -> "TUESDAY"
-        Calendar.WEDNESDAY -> "WEDNESDAY"
-        Calendar.THURSDAY -> "THURSDAY"
-        Calendar.FRIDAY -> "FRIDAY"
-        Calendar.SATURDAY -> "SATURDAY"
-        else -> "UNKNOWN"
+        Calendar.SUNDAY -> stringResource(R.string.sunday)
+        Calendar.MONDAY -> stringResource(R.string.monday)
+        Calendar.TUESDAY -> stringResource(R.string.tuesday)
+        Calendar.WEDNESDAY -> stringResource(R.string.wednesday)
+        Calendar.THURSDAY -> stringResource(R.string.thursday)
+        Calendar.FRIDAY -> stringResource(R.string.friday)
+        Calendar.SATURDAY -> stringResource(R.string.saturday)
+        else -> stringResource(R.string.unknown)
     }
 }

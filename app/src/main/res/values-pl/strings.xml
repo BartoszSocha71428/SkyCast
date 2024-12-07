@@ -10,4 +10,13 @@
     <string name="localDate">Data</string>
     <string name="conditionIcon">Ikona warunków pogodowych</string>
     <string name="locationIcon">Ikona lokalizacji</string>
+    <string name="forecast">Prognoza</string>
+    <string name="sunday">Niedziela</string>
+    <string name="monday">Poniedziałek</string>
+    <string name="tuesday">Wtorek</string>
+    <string name="wednesday">Środa</string>
+    <string name="thursday">Czwartek</string>
+    <string name="friday">Piątek</string>
+    <string name="saturday">Sobota</string>
+    <string name="unknown">Nieznany</string>
 </resources>

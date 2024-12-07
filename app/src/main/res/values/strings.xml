@@ -9,4 +9,13 @@
     <string name="localDate">Local Date</string>
     <string name="conditionIcon">Weather condition icon</string>
     <string name="locationIcon">Location icon</string>
+    <string name="forecast">Forecast</string>
+    <string name="sunday">Sunday</string>
+    <string name="monday">Poniedziałek</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="unknown">Unknown</string>
 </resources>
